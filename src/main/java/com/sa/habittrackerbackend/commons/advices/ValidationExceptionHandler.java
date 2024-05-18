@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.validation.method.MethodValidationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,7 +18,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.nio.file.AccessDeniedException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
@@ -41,19 +39,10 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
                 .getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
+                .toList();
         body.put("errors", errors);
 
         return new ResponseEntity<>(body, headers, status);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleMethodValidationException(
-            @NonNull MethodValidationException ex,
-            @NonNull HttpHeaders headers,
-            @NonNull HttpStatus status,
-            @NonNull WebRequest request) {
-        return super.handleMethodValidationException(ex, headers, status, request);
     }
 
     @ExceptionHandler({AccessDeniedException.class})
@@ -73,7 +62,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ApiErrorDto> handleBadRequestException(BadRequestException exception, WebRequest webRequest) {
+    public ResponseEntity<ApiErrorDto> handleBadRequestException(BadRequestException exception) {
         return new ResponseEntity<>(
                 new ApiErrorDto(exception.getMessage(), exception.getDetails(), exception.getCode()),
                 HttpStatus.BAD_REQUEST

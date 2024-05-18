@@ -5,16 +5,16 @@ import lombok.Getter;
 @Getter
 public abstract class AbstractCheckedException extends Exception {
 
-    protected final Object details;
+    protected transient final Object details;
     protected final String code;
 
-    public AbstractCheckedException(String message, Object details, String code) {
+    protected AbstractCheckedException(String message, Object details, String code) {
         super(message);
         this.details = details;
         this.code = code;
     }
 
-    public AbstractCheckedException(Throwable cause, String message, Object details, String code) {
+    protected AbstractCheckedException(Throwable cause, String message, Object details, String code) {
         super(message, cause);
         this.code = code;
         this.details = details;
