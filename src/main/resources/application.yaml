@@ -1,1 +1,22 @@
-spring.application.name=HabitTracker-Backend
+spring:
+  application:
+    name: HabitTracker-Backend
+
+
+  datasource:
+    url: jdbc:mariadb://localhost:3306/habits?createDatabaseIfNotExist=true
+    username: root
+    password: root
+    driver-class-name: org.mariadb.jdbc.Driver
+
+
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
+    default-schema: habits
+    drop-first: false
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
