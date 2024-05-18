@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Getter
 public class CustomUserDetails extends User {
-    private transient final UserEntity userEntity;
+    private final transient UserEntity userEntity;
 
     public CustomUserDetails(UserEntity user , Collection<? extends GrantedAuthority> authorities) {
         super(user.getEmail(), user.getPassword(), authorities);

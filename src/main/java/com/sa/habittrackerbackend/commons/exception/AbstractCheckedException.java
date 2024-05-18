@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public abstract class AbstractCheckedException extends Exception {
 
-    protected transient final Object details;
+    protected final transient Object details;
     protected final String code;
 
     protected AbstractCheckedException(String message, Object details, String code) {
