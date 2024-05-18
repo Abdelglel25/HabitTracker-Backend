@@ -36,7 +36,7 @@ public class UserEntity {
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private RolesEnum role;
+    private RolesEnum role = RolesEnum.USER;
 
     @Column(name = "creation_date", nullable = false)
     private Date creationDate = new Date();
