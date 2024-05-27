@@ -52,7 +52,7 @@ jobs:
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN_MVN_JACOCO }}
         with:
-          args: "-l,jetbrains/qodana-jvm:2024.1"
+          args: "-e,QODANA_TOKEN=-${{ secrets.QODANA_TOKEN }},-l,jetbrains/qodana-jvm:2024.1"
           pr-mode: false
 #jobs:
 #  qodana:
