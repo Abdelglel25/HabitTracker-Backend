@@ -54,9 +54,13 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public UserLoginResponseDto login(LoginUserDto loginUserDto) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword())
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword())
+            );
+        } catch (Exception e) {
+            throw new UsernameNotFoundException(e.getMessage());
+        }
 
         UserEntity userEntity = userRepository.findByEmail(loginUserDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return UserLoginResponseDto.builder()

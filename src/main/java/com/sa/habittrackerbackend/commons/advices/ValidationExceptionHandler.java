@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -67,6 +68,14 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
                 new ApiErrorDto(exception.getMessage(), exception.getDetails(), exception.getCode()),
                 HttpStatus.BAD_REQUEST
         );
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleUsernameNotSignedUpException(UsernameNotFoundException exception, @NonNull WebRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        Map<String, Object> body = buildErrorBody((ServletWebRequest) request, status);
+        body.put(MESSAGE_STRING,exception.getMessage());
+        return new ResponseEntity<>(body, status);
     }
 
     private Map<String, Object> buildErrorBody(ServletWebRequest request, HttpStatus status) {
