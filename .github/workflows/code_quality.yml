@@ -23,22 +23,18 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: Install dependencies
-        run: npm ci
-        working-directory: JS/jest
-
       - name: Run tests
-        run: npm test
-        working-directory: JS/jest
+        run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent clean package -P qodana-report
+#        working-directory: .qodana/code-coverage
 
       - name: Archive coverage data # Archive data for using by Qodana
         uses: actions/upload-artifact@v2
         with:
-          name: jest-coverage-data
-          path: JS/jest/.qodana/code-coverage
+          name: jacoco-tests
+          path: .qodana/code-coverage
 
       - name: Qodana Scan # Run Qodana
-        uses: JetBrains/qodana-action@main
+        uses: JetBrains/qodana-action@v2024.1
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN_JS }}
         with:
