@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -56,7 +57,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({BadCredentialsException.class})
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex, @NonNull WebRequest request){
-        HttpStatus status = HttpStatus.FORBIDDEN;
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         Map<String, Object> body = buildErrorBody((ServletWebRequest) request, status);
         body.put(MESSAGE_STRING,ex.getMessage());
         return new ResponseEntity<>(body,status);
@@ -75,6 +76,14 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         Map<String, Object> body = buildErrorBody((ServletWebRequest) request, status);
         body.put(MESSAGE_STRING,exception.getMessage());
+        return new ResponseEntity<>(body, status);
+    }
+
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public ResponseEntity<Object> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        Map<String, Object> body = buildErrorBody((ServletWebRequest) request, status);
+        body.put(MESSAGE_STRING,ex.getMessage());
         return new ResponseEntity<>(body, status);
     }
 
