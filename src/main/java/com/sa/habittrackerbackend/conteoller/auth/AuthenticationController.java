@@ -31,7 +31,7 @@ public interface AuthenticationController {
     @Operation(summary = "Sign in as a user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login successful", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "401", description = "Invalid credentials",
+            @ApiResponse(responseCode = "401", description = "User or password is incorrect",
                     content = @Content(schema = @Schema(implementation = ApiErrorDto.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = ApiErrorDto.class)))
