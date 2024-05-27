@@ -9,42 +9,48 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
+
     permissions:
       contents: write
       pull-requests: write
       checks: write
 
     steps:
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: 'maven'
+
+      - name: Validate Maven Wrapper
+        run: mvn --version
+#        working-directory: JVM/jacoco/maven
+
       - name: Run tests
         run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent clean package -P qodana-report
-#        working-directory: .qodana/code-coverage
+#        working-directory: JVM/jacoco/maven
 
-      - name: Archive coverage data # Archive data for using by Qodana
+
+      - name: Archive coverage data
         uses: actions/upload-artifact@v2
         with:
-          name: jacoco-tests
+          name: maven-coverage-data-jacoco
           path: .qodana/code-coverage
 
       - name: Qodana Scan # Run Qodana
         uses: JetBrains/qodana-action@v2024.1
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN_JS }}
-        with:
-          args: "-i,JS/jest,--linter,jetbrains/qodana-js:2024.1"
-          pr-mode: false
 #jobs:
 #  qodana:
 #    runs-on: ubuntu-latest
