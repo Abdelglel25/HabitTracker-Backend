@@ -8,17 +8,18 @@ import com.sa.habittrackerbackend.dto.user.RegisterUserDto;
 import com.sa.habittrackerbackend.dto.user.UserDto;
 import com.sa.habittrackerbackend.dto.user.UserLoginResponseDto;
 import com.sa.habittrackerbackend.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Slf4j
 public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -54,11 +55,38 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public UserLoginResponseDto login(LoginUserDto loginUserDto) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword())
-        );
 
-        UserEntity userEntity = userRepository.findByEmail(loginUserDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        performAuthentication(loginUserDto);
+
+        UserEntity userEntity = findUserByEmail(loginUserDto.getEmail());
+
+        return buildLoginResponse(userEntity);
+    }
+
+    private void performAuthentication(LoginUserDto loginUserDto) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            log.warn("Authentication failed: {}", e.getMessage());
+            throw new BadCredentialsException("Bad credentials");
+        } catch (Exception e) {
+            log.error("Authentication failed: {}", e.getMessage());
+            throw new InternalAuthenticationServiceException("Authentication failed");
+        }
+    }
+
+    private UserEntity findUserByEmail(String email) {
+        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
+        if (userEntity.isEmpty()) {
+            log.error("User not found");
+            throw new InternalError("Iternal server error");
+        }
+        return userEntity.get();
+    }
+
+    private UserLoginResponseDto buildLoginResponse(UserEntity userEntity) {
         return UserLoginResponseDto.builder()
                 .token(jwtService.generateToken(new CustomUserDetails(userEntity, List.of(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole())))))
                 .expiresIn(jwtService.getJwtExpiration())
