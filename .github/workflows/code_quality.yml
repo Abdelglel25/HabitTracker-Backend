@@ -22,8 +22,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }} # to check out the actual pull request commit, not the merge commit
+          fetch-depth: 0 # a full history is required for pull request analysis
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -49,25 +49,8 @@ jobs:
 
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2024.1
-#        run: qodana scan -e QODANA_TOKEN=${{ secrets.QODANA_TOKEN_MVN_JACOCO }} -l jetbrains/qodana-jvm:2024.1
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
           args: "-l,jetbrains/qodana-jvm:2024.1"
           pr-mode: false
-#jobs:
-#  qodana:
-#    runs-on: ubuntu-latest
-#    permissions:
-#      contents: write
-#      pull-requests: write
-#      checks: write
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
-#          fetch-depth: 0  # a full history is required for pull request analysis
-#      - name: 'Qodana Scan'
-#        uses: JetBrains/qodana-action@v2024.1
-#        env:
-#          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
