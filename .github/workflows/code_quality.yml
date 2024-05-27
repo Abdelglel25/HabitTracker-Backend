@@ -49,7 +49,7 @@ jobs:
 
       - name: Qodana Scan
         uses: JetBrains/qodana-action@v2024.1
-        run: qodana scan -e QODANA_TOKEN=${{ secrets.QODANA_TOKEN_MVN_JACOCO }} -l jetbrains/qodana-jvm:2024.1
+#        run: qodana scan -e QODANA_TOKEN=${{ secrets.QODANA_TOKEN_MVN_JACOCO }} -l jetbrains/qodana-jvm:2024.1
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN_MVN_JACOCO }}
 #        with:
