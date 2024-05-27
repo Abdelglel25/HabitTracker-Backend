@@ -8,6 +8,7 @@ import com.sa.habittrackerbackend.dto.user.RegisterUserDto;
 import com.sa.habittrackerbackend.dto.user.UserDto;
 import com.sa.habittrackerbackend.dto.user.UserLoginResponseDto;
 import com.sa.habittrackerbackend.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -59,7 +61,8 @@ public class AuthServiceImpl implements AuthService{
                     new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword())
             );
         } catch (Exception e) {
-            throw new UsernameNotFoundException(e.getMessage());
+            log.warn("Authentication failed: {} :: With email: {}", e.getMessage(), loginUserDto.getEmail());
+            throw new UsernameNotFoundException("Invalid username or password.");
         }
 
         UserEntity userEntity = userRepository.findByEmail(loginUserDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
