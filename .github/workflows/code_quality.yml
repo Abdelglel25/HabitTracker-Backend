@@ -37,7 +37,7 @@ jobs:
 #        working-directory: JVM/jacoco/maven
 
       - name: Run tests
-        run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent clean package -P qodana-report
+        run: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package -P qodana-report
 #        working-directory: JVM/jacoco/maven
 
 

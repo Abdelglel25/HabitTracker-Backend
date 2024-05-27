@@ -155,6 +155,10 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<skip>${skipUnitTests}</skip>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/*IT.java</include>
+					</includes>
 				</configuration>
 			</plugin>
 
@@ -188,9 +192,9 @@
 								<configuration>
 									<outputDirectory>${project.basedir}/.qodana/code-coverage/</outputDirectory>
 									<formats>XML</formats>
-									<includes>
-										<include>com/sa/habitTrackerBackend/**</include>
-									</includes>
+<!--									<includes>-->
+<!--										<include>com/sa/habitTrackerBackend/**</include>-->
+<!--									</includes>-->
 								</configuration>
 							</execution>
 						</executions>
