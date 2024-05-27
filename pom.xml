@@ -189,7 +189,7 @@
 									<outputDirectory>${project.basedir}/.qodana/code-coverage/</outputDirectory>
 									<formats>XML</formats>
 									<includes>
-										<include>com/sa/habittrackerbackend/**</include>
+										<include>com/sa/habitTrackerBackend/**</include>
 									</includes>
 								</configuration>
 							</execution>
