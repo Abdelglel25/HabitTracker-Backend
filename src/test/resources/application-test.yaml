@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/habittracker?createDatabaseIfNotExist=true
+    username: testContainerUser
+    password: testContainerPass
+    driver-class-name: org.mariadb.jdbc.Driver
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
+    default-schema: habittracker
+    drop-first: false
