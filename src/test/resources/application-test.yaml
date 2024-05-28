@@ -8,3 +8,8 @@ spring:
     change-log: db/changelog/db.changelog-master.yaml
     default-schema: habittracker
     drop-first: false
+
+security:
+  jwt:
+    secret-key: RCrjLqOyLgYZJx+WvSn1iKrvOaonSrVQNwzBuVldSl8=
+    expiration-time: 5000

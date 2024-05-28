@@ -1,11 +1,14 @@
 package com.sa.habitTrackerBackend.configurations.auth;
 
+import com.sa.habitTrackerBackend.dao.UserEntity;
+import com.sa.habitTrackerBackend.service.user.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,12 +21,18 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
+    private final UserService userService;
     @Value("${security.jwt.secret-key}")
     private String secretKey;
 
     @Value("${security.jwt.expiration-time}")
     @Getter
     private long jwtExpiration;
+
+    @Autowired
+    public JwtService(UserService userService) {
+        this.userService = userService;
+    }
 
     public String extractSubject(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -34,7 +43,7 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
@@ -73,10 +82,12 @@ public class JwtService {
             UserDetails userDetails,
             long expiration
     ) {
+        UserEntity user = userService.getUserByEmail(userDetails.getUsername());
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
+                .claim("role", user.getRole())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
