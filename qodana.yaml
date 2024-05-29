@@ -171,37 +171,13 @@ include:
   - name: ServletWithoutMappingInspection
   - name: WebProperties
   - name: WebWarnings
-  - name: AssertStatement
-  - name: Annotation
-  - name: AnnotationClass
-  - name: ForeachStatement
-  - name: EnumClass
-  - name: VarargParameter
   - name: UseCompareMethod
   - name: IfCanBeSwitch
   - name: ForEachWithRecordPatternCanBeUsed
   - name: EnumerationCanBeIteration
-  - name: ClassWithoutConstructor
-  - name: ClassWithoutNoArgConstructor
   - name: FieldHasSetterButNoGetter
   - name: PropertyValueSetToItself
   - name: SuspiciousGetterSetter
-  - name: HtmlTagCanBeJavadocTag
-  - name: PackageInfoWithoutPackage
-  - name: PackageDotHtmlMayBePackageInfo
-  - name: JavadocBlankLines
-  - name: ReplaceWithJavadoc
-  - name: DanglingJavadoc
-  - name: JavadocReference
-  - name: JavadocHtmlLint
-  - name: JavadocDeclaration
-  - name: JavadocLinkAsPlainText
-  - name: MismatchedJavadocCode
-  - name: MissingDeprecatedAnnotation
-  - name: MissingPackageInfo
-  - name: MissingJavadoc
-  - name: UnnecessaryInheritDoc
-  - name: UnnecessaryJavaDocLink
   - name: JpaEntityListenerInspection
   - name: JpaEntityListenerWarningsInspection
   - name: JpaORMDomInspection
@@ -333,3 +309,34 @@ include:
   - name: LambdaParameterHidingMemberVariable
   - name: MethodOverridesStaticMethod
   - name: FieldHidesSuperclassField
+  - name: YAMLDuplicatedKeys
+  - name: YAMLSchemaDeprecation
+  - name: YAMLRecursiveAlias
+  - name: YAMLIncompatibleTypes
+  - name: YAMLUnresolvedAlias
+  - name: YAMLUnusedAnchor
+  - name: YAMLSchemaValidation
+exclude:
+  - name: AssertStatement
+  - name: Annotation
+  - name: AnnotationClass
+  - name: ForeachStatement
+  - name: EnumClass
+  - name: ForwardCompatibility
+  - name: VarargParameter
+  - name: HtmlTagCanBeJavadocTag
+  - name: PackageInfoWithoutPackage
+  - name: PackageDotHtmlMayBePackageInfo
+  - name: JavadocBlankLines
+  - name: ReplaceWithJavadoc
+  - name: DanglingJavadoc
+  - name: JavadocReference
+  - name: JavadocHtmlLint
+  - name: JavadocDeclaration
+  - name: JavadocLinkAsPlainText
+  - name: MismatchedJavadocCode
+  - name: MissingDeprecatedAnnotation
+  - name: MissingPackageInfo
+  - name: MissingJavadoc
+  - name: UnnecessaryInheritDoc
+  - name: UnnecessaryJavaDocLink
