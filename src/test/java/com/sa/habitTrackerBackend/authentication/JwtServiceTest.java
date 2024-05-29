@@ -6,6 +6,7 @@ import com.sa.habitTrackerBackend.dao.UserEntity;
 import com.sa.habitTrackerBackend.repository.UserRepository;
 import com.sa.habitTrackerBackend.utils.AbstractIntegrationIT;
 import com.sa.habitTrackerBackend.utils.entity.UserTestUtility;
+import com.sa.habitTrackerBackend.utils.enums.RolesEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ public class JwtServiceTest extends AbstractIntegrationIT {
 
     @Test
     void generateTokenSuccessfully() {
-        UserEntity user = (UserEntity) UserTestUtility.buildUsersWithUSERRole(1);
+        UserEntity user = UserTestUtility.createSingleUserWithRole(RolesEnum.USER);
         userRepository.save(user);
 
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
@@ -46,7 +47,7 @@ public class JwtServiceTest extends AbstractIntegrationIT {
 
     @Test
     void generateTokenFail() {
-        UserEntity user = (UserEntity) UserTestUtility.buildUsersWithUSERRole(1);
+        UserEntity user = UserTestUtility.createSingleUserWithRole(RolesEnum.USER);
 
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
         UserDetails customUserDetails = new CustomUserDetails(user, authorities);
@@ -56,7 +57,7 @@ public class JwtServiceTest extends AbstractIntegrationIT {
 
     @Test
     void extractClaimsSuccessfully() {
-        UserEntity user = (UserEntity) UserTestUtility.buildUsersWithUSERRole(1);
+        UserEntity user = UserTestUtility.createSingleUserWithRole(RolesEnum.USER);
         userRepository.save(user);
 
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
@@ -78,19 +79,20 @@ public class JwtServiceTest extends AbstractIntegrationIT {
 
     @Test
     @DirtiesContext
-    void tokenExpired() throws NoSuchFieldException, IllegalAccessException {
-        expirationTime = 100L;
+    void tokenExpired() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+        expirationTime = 4L;
         Field privateField = JwtService.class.getDeclaredField("jwtExpiration");
         privateField.setAccessible(true);
         privateField.set(jwtService, expirationTime);
 
-        UserEntity user = (UserEntity) UserTestUtility.buildUsersWithUSERRole(1);
+        UserEntity user = UserTestUtility.createSingleUserWithRole(RolesEnum.USER);
         userRepository.save(user);
 
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
         UserDetails customUserDetails = new CustomUserDetails(user, authorities);
         String token = jwtService.generateToken(customUserDetails);
 
+        Thread.sleep(4L);
         assertThrows(ExpiredJwtException.class, () -> jwtService.isTokenValid(token, customUserDetails));
     }
 

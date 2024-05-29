@@ -1,12 +1,25 @@
 package com.sa.habitTrackerBackend.utils.entity;
 
 import com.sa.habitTrackerBackend.dao.UserEntity;
+import com.sa.habitTrackerBackend.utils.enums.RolesEnum;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserTestUtility {
-    public static Object buildUsersWithUSERRole(int numberOfUsers) {
+
+    public static UserEntity createSingleUserWithRole(RolesEnum rolesEnum) {
+        UserEntity user = new UserEntity();
+        user.setId(1L);
+        user.setEmail("userSing@email.com");
+        user.setFirstName("userSingle");
+        user.setLastName("lastNameSing");
+        user.setPassword(user.getLastName());
+        user.setRole(rolesEnum);
+        return user;
+    }
+
+    public static List<UserEntity> buildUsersWithUSERRole(int numberOfUsers) {
         if (numberOfUsers < 1)
             numberOfUsers = 1;
 
@@ -20,6 +33,6 @@ public class UserTestUtility {
             user.setPassword(user.getLastName());
             users.add(user);
         }
-        return numberOfUsers == 1 ? users.get(0) : users;
+        return users;
     }
 }

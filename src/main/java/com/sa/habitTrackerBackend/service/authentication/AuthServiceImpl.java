@@ -89,7 +89,7 @@ public class AuthServiceImpl implements AuthService{
     private UserLoginResponseDto buildLoginResponse(UserEntity userEntity) {
         return UserLoginResponseDto.builder()
                 .token(jwtService.generateToken(new CustomUserDetails(userEntity, List.of(new SimpleGrantedAuthority("ROLE_" + userEntity.getRole())))))
-                .expiresIn(jwtService.getJwtExpiration())
+                .expireDurationMillis(jwtService.getJwtExpiration())
                 .build();
     }
 }
