@@ -20,8 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface AuthenticationController {
     @Operation(summary = "Register a new user", description = "Creates a new user account")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created successfully", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "400", description = "Invalid request data",
+            @ApiResponse(responseCode = "201", description = "User created successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDto.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid or missing fields",
                     content = @Content(schema = @Schema(implementation = ApiErrorDto.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = ApiErrorDto.class)))
@@ -30,7 +31,10 @@ public interface AuthenticationController {
 
     @Operation(summary = "Sign in as a user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login successful", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "200", description = "Login successful",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserLoginResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid or missing fields",
+                    content = @Content(schema = @Schema(implementation = ApiErrorDto.class))),
             @ApiResponse(responseCode = "401", description = "User or password is incorrect",
                     content = @Content(schema = @Schema(implementation = ApiErrorDto.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error",

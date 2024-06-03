@@ -7,6 +7,7 @@ import com.sa.habitTrackerBackend.dto.user.UserLoginResponseDto;
 import com.sa.habitTrackerBackend.service.authentication.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ public class AuthenticationControllerImpl implements AuthenticationController{
 
     @PostMapping("/signup")
     public ResponseEntity<UserDto> register(@RequestBody @Valid RegisterUserDto registerUserDto) {
-        return ResponseEntity.ok(authService.signUp(registerUserDto));
+        return new ResponseEntity<>(authService.signUp(registerUserDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
